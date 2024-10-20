@@ -1,15 +1,21 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { throttledGetDataFromApi } from './index';
 
 jest.mock('axios');
 jest.mock('lodash', () => ({
-  throttle: (fn: any) => fn,
+  throttle: <T extends (...args: unknown[]) => ReturnType<T>>(fn: T): T => fn,
 }));
+
+interface MockAxiosInstance extends Partial<AxiosInstance> {
+  get: jest.Mock;
+}
 
 describe('throttledGetDataFromApi', () => {
   const mockResponseData = { id: 1, title: 'Test' };
-  let axiosCreateMock: any;
-  let axiosClientMock: any;
+  // let axiosCreateMock: any;
+  // let axiosClientMock: any;
+  let axiosCreateMock: jest.Mock;
+  let axiosClientMock: MockAxiosInstance;
 
   beforeEach(() => {
     axiosClientMock = {
